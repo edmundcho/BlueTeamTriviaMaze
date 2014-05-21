@@ -13,6 +13,12 @@ namespace BlueTeamTriviaMaze
     {
         public static int ROOM_SIZE = 75;
 
+        public enum Type { Normal, Entrance, Exit }
+        public enum State { NotVisited, Visited }
+
+        private Type _type;
+        private State _state;
+
         public Shape Drawable;
 
         public Door WestDoor { get; private set; }
@@ -20,8 +26,28 @@ namespace BlueTeamTriviaMaze
         public Door NorthDoor { get; private set; }
         public Door SouthDoor { get; private set; }
 
-        public Room(int x, int y, Door north, Door south, Door east, Door west)
+        public Type GetType() { return _type; }
+        public State GetState() { return _state; }
+        public void SetState(State state)
         {
+            _state = state;
+
+            if (_state == State.Visited)
+            {
+                Drawable.Fill = Brushes.GhostWhite;
+            }
+            else if (_state == State.NotVisited)
+            {
+                Drawable.Fill = Brushes.DarkGray;
+            }
+        }
+
+
+
+        public Room(int x, int y, Type type, Door north, Door south, Door east, Door west)
+        {
+            _type = type;
+
             // store all the doors- some can be null for edge cases
             NorthDoor = north;
             SouthDoor = south;
@@ -35,11 +61,18 @@ namespace BlueTeamTriviaMaze
             Canvas.SetLeft(Drawable, x * ROOM_SIZE);
             Canvas.SetTop(Drawable, y * ROOM_SIZE);
 
-            //Drawable.StrokeThickness = 1; // thick walls
-            Drawable.Stroke = Brushes.Black;
-            Drawable.Fill = Brushes.LightGray;
+            if (_type == Type.Exit)
+                Drawable.Stroke = Brushes.LimeGreen;
+            else
+                Drawable.Stroke = Brushes.Black;
 
             Drawable.Width = Drawable.MinWidth = Drawable.MaxWidth = Drawable.Height = Drawable.MinHeight = Drawable.MaxHeight = ROOM_SIZE;
-        }
+
+
+            // all rooms start as not visited
+            SetState(State.NotVisited);
+
+
+        } // end public Room(...)
     }
 }
