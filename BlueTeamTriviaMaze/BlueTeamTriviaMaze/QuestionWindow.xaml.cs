@@ -19,11 +19,9 @@ namespace BlueTeamTriviaMaze
     /// </summary>
     public partial class QuestionWindow : Window
     {
-        public static int ANSWER_CANCELLED = -1,
-            ANSWER_INCORRECT = 0,
-            ANSWER_CORRECT = 1;
+        public enum Result { Cancelled, Correct, Incorrect };
 
-        public static int TYPE_TRUE_FALSE = 0,
+        public const int TYPE_TRUE_FALSE = 0,
             TYPE_MULTIPLE_CHOICE = 1;
 
 
@@ -31,7 +29,7 @@ namespace BlueTeamTriviaMaze
         private string _guess;
         TriviaItem _triviaItem;
 
-        public int Answer { get; private set; }
+        public Result Answer { get; private set; }
 
 
 
@@ -39,7 +37,7 @@ namespace BlueTeamTriviaMaze
         {
             InitializeComponent();
 
-            Answer = ANSWER_CANCELLED;
+            Answer = Result.Cancelled;
             
             _triviaItem = new TriviaItem();
             
@@ -49,9 +47,9 @@ namespace BlueTeamTriviaMaze
         private void btnSubmit_Click(object sender, RoutedEventArgs e)
         {
             if (_guess.Equals(_triviaItem.Answer))
-                Answer = ANSWER_CORRECT;
+                Answer = Result.Correct;
             else
-                Answer = ANSWER_INCORRECT;
+                Answer = Result.Incorrect;
 
             this.Close();
         }

@@ -29,7 +29,7 @@ namespace BlueTeamTriviaMaze
         private void btnEnterMaze_Click(object sender, RoutedEventArgs e)
         {
             _mazeWindow = new MazeWindow((int)this.sldWidth.Value, (int)this.sldHeight.Value);
-            _mazeWindow.Show();
+            _mazeWindow.ShowDialog();
         }
     }
 }

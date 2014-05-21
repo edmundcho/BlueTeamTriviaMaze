@@ -26,11 +26,10 @@ namespace BlueTeamTriviaMaze
         {
             return _instance; 
         }
+        
 
-        private QuestionWindow _questionWindow;
-        private DoubleAnimation Anim;
+
         private Maze _maze;
-
         public Maze GetMaze()
         {
             return _maze;
@@ -44,19 +43,20 @@ namespace BlueTeamTriviaMaze
 
             _maze = new Maze(maze_width, maze_height);
 
-            this.myCanvas.Children.Add(_maze);
+            Content = _maze;
+
+            Width = maze_width * Room.ROOM_SIZE + Door.DOOR_SIZE - 5;
+            Height = maze_height * Room.ROOM_SIZE + Door.DOOR_SIZE + 18; // arbitrary value accounts for border padding crap
         }
 
-        public void Win()
-        {
-            
-        }
 
-        public void Lose()
-        {
-            
-        }
 
+
+
+
+
+
+        /*
         private void btnQuestion_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -90,6 +90,6 @@ namespace BlueTeamTriviaMaze
             }
 
             _questionWindow = null;
-        }
+        }*/
     }
 }

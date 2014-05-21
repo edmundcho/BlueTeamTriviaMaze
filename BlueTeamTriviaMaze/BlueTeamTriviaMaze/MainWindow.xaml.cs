@@ -30,7 +30,7 @@ namespace BlueTeamTriviaMaze
         private void btnStart_Click(object sender, RoutedEventArgs e)
         {
             _settingsWindow = new SettingsWindow();
-            _settingsWindow.Show();
+            _settingsWindow.ShowDialog();
         }
     }
 }
