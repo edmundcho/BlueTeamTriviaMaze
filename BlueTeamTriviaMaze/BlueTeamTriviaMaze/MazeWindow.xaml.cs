@@ -27,30 +27,62 @@ namespace BlueTeamTriviaMaze
 
 
         private Maze _maze;
+        private int _currentTime;
+
         public Maze GetMaze() { return _maze; }
+
+
 
         public MazeWindow(int maze_width, int maze_height)
         {
             _instance = this;
 
             InitializeComponent();
+            Title = "Maze - " + maze_width + "x" + maze_height;
+            
 
-            Width = maze_width * Room.ROOM_SIZE + Door.DOOR_SIZE - 4;    // to get the window to fit the maze perfectly, the window width/height needs adjusting
-            Height = maze_height * Room.ROOM_SIZE + Door.DOOR_SIZE + 19; // by these arbitrary values to account for border padding crap window forms always have
+            // size the canvas(es) to the maze size
+            cvsMaze.Width = maze_width * Room.ROOM_SIZE;
+            cvsMaze.Height = cvsInformation.Height = maze_height * Room.ROOM_SIZE; 
+            
+
+            // construct and add the maze to its canvas
+            CreateMaze(maze_width, maze_height);
 
 
-
-            // Construct the maze
-            _maze = new Maze(maze_width, maze_height,                    // maze dimensions
-                             0, 0,                                       // maze entrance
-                             new int[,] {{maze_width-1, maze_height-1},  // array of maze exits- (x,y) pairs
-                                         {0, maze_height-2}});              
-
-            Content = _maze;
+            // start the game timer
+            StartTimer();
 
         } // end MazeWindow(width, height)
 
 
+
+        private void CreateMaze(int maze_width, int maze_height)
+        {
+            _maze = new Maze(maze_width, maze_height,                    // maze dimensions
+                             0, 0,                                       // maze entrance
+                             new int[,] {{maze_width-1, maze_height-1},  // array of maze exits- (x,y) pairs
+                                         {0, maze_height-2}});
+
+            cvsMaze.Children.Add(_maze);
+        }
+
+
+
+        private void StartTimer()
+        {
+            _currentTime = 0;
+
+            System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
+            dispatcherTimer.Tick += new EventHandler(Timer_Tick);
+            dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
+            dispatcherTimer.Start();
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            lblTime.Content = "Time:  " + TimeSpan.FromSeconds(++_currentTime).ToString(@"m\:ss");
+        }
 
 
 

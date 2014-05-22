@@ -11,7 +11,7 @@ namespace BlueTeamTriviaMaze
 {
     public class Room
     {
-        public static int ROOM_SIZE = 75;
+        public static int ROOM_SIZE = 100;
 
         public enum Type { Normal, Entrance, Exit }
         public enum State { NotVisited, Visited }
@@ -26,23 +26,30 @@ namespace BlueTeamTriviaMaze
         public Door NorthDoor { get; private set; }
         public Door SouthDoor { get; private set; }
 
-        public Type GetType() { return _type; }
+        new public Type GetType() { return _type; }
         public State GetState() { return _state; }
         public void SetState(State state)
         {
             _state = state;
 
             if (_state == State.Visited)
-            {
                 Drawable.Fill = Brushes.GhostWhite;
-            }
+            
             else if (_state == State.NotVisited)
-            {
                 Drawable.Fill = Brushes.DarkGray;
-            }
         }
 
-
+        public void SetDoorsEnabled(bool enabled)
+        {
+            if (NorthDoor != null)
+                NorthDoor.IsEnabled = enabled;
+            if (SouthDoor != null)
+                SouthDoor.IsEnabled = enabled;
+            if (EastDoor != null)
+                EastDoor.IsEnabled = enabled;
+            if (WestDoor != null)
+                WestDoor.IsEnabled = enabled;
+        }
 
         public Room(int x, int y, Type type, Door north, Door south, Door east, Door west)
         {

@@ -21,17 +21,7 @@ namespace BlueTeamTriviaMaze
     public class Maze : Canvas
     {
         private Room[,] _rooms;
-
-
-
-        // Helper function. Returns the room given via the array indicies [y,x], or null if out of bounds.
-        private Room GetRoom(int x, int y)
-        {
-            if (y < 0 || x < 0 || y >= _rooms.GetLength(0) || x >= _rooms.GetLength(1))
-                return null;
-
-            return _rooms[y, x];
-        }
+        private Player _player;
 
 
 
@@ -108,10 +98,10 @@ namespace BlueTeamTriviaMaze
 
                     // Determine the Room type based this Room's location- this figures out if this Room is the entrance, an exit or a normal room
                     Room.Type room_type = Room.Type.Normal;
+
                     if (x == entrance_x && y == entrance_y) // check if its the entrance
                         room_type = Room.Type.Entrance;
                     
-
                     else // check if this Room is an exit room
                         for (int i = 0; i < exits_xy.GetLength(0) && room_type == Room.Type.Normal; ++i)
                             if (x == exits_xy[i, 0] && y == exits_xy[i, 1])
@@ -119,15 +109,8 @@ namespace BlueTeamTriviaMaze
 
 
 
-
-                    // create and store a new Room, composed of all its
-                    // appropriate doors (either freshly-generated or as taken from the neighboring rooms)
-                    _rooms[y, x] = new Room(x, y, room_type, northDoor, southDoor, eastDoor, westDoor);
-
-
-                    // Finally, add that new Room as a child of the Maze (canvas) so it may be drawn
-                    Children.Add(_rooms[y, x].Drawable);
-
+                    // Create and add the room given its (x,y) location, type and NSEW doors
+                    CreateRoom(x, y, room_type, northDoor, southDoor, eastDoor, westDoor);
 
                 } // end for (width)
             } // end for (height)
@@ -141,7 +124,43 @@ namespace BlueTeamTriviaMaze
                 Children.Add(door);
 
 
+
+            // Create and add the Player to the maze
+            CreatePlayer(entrance_x, entrance_y, 3);
+
         } // end public Maze(...)
+
+
+
+        // Helper function. Returns the room given its array indicies [y,x] into the maze, or null if out of bounds.
+        private Room GetRoom(int x, int y)
+        {
+            if (y < 0 || x < 0 || y >= _rooms.GetLength(0) || x >= _rooms.GetLength(1))
+                return null;
+
+            return _rooms[y, x];
+        }
+
+
+
+        private void CreateRoom(int x, int y, Room.Type room_type, Door northDoor, Door southDoor, Door eastDoor, Door westDoor)
+        {
+            // create and store a new Room, composed of all its
+            // appropriate doors (either freshly-generated or as taken from the neighboring rooms)
+            _rooms[y, x] = new Room(x, y, room_type, northDoor, southDoor, eastDoor, westDoor);
+
+            // add that new Room as a child of the Maze (canvas) so it may be drawn
+            Children.Add(_rooms[y, x].Drawable);
+        }
+
+
+
+        private void CreatePlayer(int start_x, int start_y, int key_count)
+        {
+            _player = new Player(_rooms[start_y, start_x], key_count);
+
+            Children.Add(_player.Drawable);
+        }
 
 
 
